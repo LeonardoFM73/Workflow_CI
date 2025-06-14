@@ -4,12 +4,14 @@ from sklearn.ensemble import RandomForestRegressor
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import mean_absolute_error, mean_squared_error, r2_score
 import pandas as pd
+import os
 
 mlflow.set_tracking_uri("http://127.0.0.1:5000/")
 mlflow.set_experiment("Modeling Student Habits Performance")
 
 # Data
-df = pd.read_csv(r"Membangun_model\student_habits_performance_preprocessed.csv")
+dataset_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), "student_habits_performance_preprocessed.csv")
+df = pd.read_csv(dataset_path)
 X = df.drop("exam_score", axis=1)
 y = df["exam_score"]
 
