@@ -56,12 +56,12 @@ jobs:
     # Tag the Docker image
     - name: Tag Docker Image
       run: |
-        docker tag cc ${{ secrets.DOCKER_HUB_USERNAME }}/student-habits-imagecc:latest
+        docker tag cc ${{ secrets.DOCKER_HUB_USERNAME }}/student-habits-image:latest
 
     # Push Docker image to Docker Hub
     - name: Push Docker Image
       run: |
-        docker push ${{ secrets.DOCKER_HUB_USERNAME }}/student-habits-imagecc:latest
+        docker push ${{ secrets.DOCKER_HUB_USERNAME }}/student-habits-image:latest
 
     - name: Upload Artifacts (Optional)
       uses: actions/upload-artifact@v4
