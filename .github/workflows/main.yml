@@ -28,15 +28,20 @@ jobs:
     # Run MLflow Project
     - name: Run MLflow Project
       run: |
-        mlflow run ./MLProject --env-manager=local
+        mlflow run MLProject --env-manager=local
 
     # Ambil run_id terakhir
     - name: Get latest MLflow run_id
-      id: get_run_id
       run: |
         RUN_ID=$(ls -td mlruns/0/*/ | head -n 1 | cut -d'/' -f3)
-        echo "Found RUN_ID: $RUN_ID"
-        echo "run_id=$RUN_ID" >> "$GITHUB_OUTPUT"
+        echo "RUN_ID=$RUN_ID" >> $GITHUB_ENV
+        echo "Latest run_id: $RUN_ID"
+
+    
+    # Build Docker Model
+    - name: Build Docker Model
+      run: |
+        mlflow models build-docker --model-uri "runs:/$RUN_ID/model" --name "cc" 
 
     # Login ke Docker Hub
     - name: Log in to Docker Hub
@@ -44,21 +49,15 @@ jobs:
       with:
         username: ${{ secrets.DOCKER_HUB_USERNAME }}
         password: ${{ secrets.DOCKER_HUB_ACCESS_TOKEN }}
-
-    # Build Docker image dari model
-    - name: Build Docker Image from MLflow Model
-      run: |
-        mlflow models build-docker -m "mlruns/0/${{ steps.get_run_id.outputs.run_id }}/artifacts/model" -n student-habits-image
-
-    # Tag image
+     # Tag the Docker image
     - name: Tag Docker Image
       run: |
-        docker tag student-habits-image ${{ secrets.DOCKER_HUB_USERNAME }}/student-habits-image:latest
+        docker tag cc ${{ secrets.DOCKER_HUB_USERNAME }}/cc:latest
 
-    # Push ke Docker Hub
+    # Push Docker image to Docker Hub
     - name: Push Docker Image
       run: |
-        docker push ${{ secrets.DOCKER_HUB_USERNAME }}/student-habits-image:latest
+        docker push ${{ secrets.DOCKER_HUB_USERNAME }}/cc:latest
 
     # Upload artefak (opsional)
     - name: Upload Artifacts
