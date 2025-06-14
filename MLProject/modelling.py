@@ -36,7 +36,7 @@ if __name__ == "__main__":
 
         mlflow.sklearn.log_model(
         sk_model=model,
-        name="model",
+        artifact_path="model"="model",
         input_example=input_example
         )
         mlflow.log_metric("MAE", mae)
