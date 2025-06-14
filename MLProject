@@ -1,0 +1,8 @@
+name: student-habits-mlproject
+
+conda_env: conda.yaml
+
+entry_points:
+  main:
+    parameters: {}
+    command: "python modeling.py"
