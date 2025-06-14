@@ -53,6 +53,10 @@ jobs:
         username: ${{ secrets.DOCKER_HUB_USERNAME }}
         password: ${{ secrets.DOCKER_HUB_ACCESS_TOKEN }}
 
+
+    - name: Build Docker Image from MLflow Model
+      run: |
+        mlflow models build-docker -m "mlruns/0/${{ env.RUN_ID }}/artifacts/model" -n student-habits-image
     # Tag the Docker image
     - name: Tag Docker Image
       run: |
